@@ -1,0 +1,6 @@
+.env
+node_modules/
+data/
+.vscode/settings.json
+.DS_Store
+backend/public

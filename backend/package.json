@@ -1,0 +1,29 @@
+{
+  "name": "crex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "coinpayments": "^2.1.0",
+    "coinpayments-ipn": "^1.0.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.3.0",
+    "pg-safe-numbers": "^0.7.0",
+    "public-ip": "^4.0.2",
+    "sequelize": "^6.3.3"
+  }
+}

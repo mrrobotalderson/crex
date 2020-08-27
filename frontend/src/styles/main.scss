@@ -1,0 +1,23 @@
+html, body {
+  min-height: 100vh;
+}
+
+#app {
+  height: 100vh;
+}
+
+.navbar {
+  background-color: #022d5c;
+  height: 64px;
+
+  &.admin {
+    background-color: #9e9e9e;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .b-sidebar-outer.pos,
+  .b-sidebar.pos {
+    position: relative !important;
+  }
+}
