@@ -22,6 +22,8 @@ const persistUser = ({ token, user }, forceReload) => {
   return user
 }
 
+const register = ({ email, password, passwordConfirm }) => http.post('/accounts/register', { user: { email, password, password_confirm: passwordConfirm } })
+
 const login = ({ email, password }) => http.post('/auth/login', { email, password })
   .then(result => persistUser(result, true))
 
@@ -50,6 +52,7 @@ export const getAuthHeaders = (options = {}) => getJwt()
   }))
 
 export default {
+  register,
   login,
   logout,
   getJwt,

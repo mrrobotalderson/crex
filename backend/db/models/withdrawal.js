@@ -5,7 +5,17 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     tag: DataTypes.STRING,
     status: DataTypes.STRING,
-    status_text: DataTypes.JSONB,
+    status_text: {
+      type: DataTypes.STRING,
+      get() {
+        const jsonbVal = this.getDataValue('status_text')
+        try {
+          return JSON.parse(jsonbVal) || {}
+        } catch (e) {
+          return {}
+        }
+      }
+    }
   })
   Withdrawal.associate = function(models) {
     Withdrawal.belongsTo(models.balance, {

@@ -33,7 +33,10 @@ export default {
             this.$router.push({ name: 'wallet' })
           })
       } else if (this.mode === 'register') {
-        console.log('register', this.user)
+        auth.register(this.user)
+          .then(() => {
+            this.mode = 'login'
+          })
       }
     }
   }

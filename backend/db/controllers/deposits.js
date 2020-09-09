@@ -29,18 +29,12 @@ const getByUserId = async (userId, type) => {
 
   let QUERY = `
     SELECT
+    DISTINCT ON (deposits.id)
     deposits.*,
     deposits.id AS deposit_id,
-    wallets.name AS wallet_name,
-    ipns.ipn_request ->> 'timestamp' AS timestamp,
-    ipns.ipn_request ->> 'received_confirms' AS received_confirms,
-    ipns.ipn_request -> 'status_text' AS ipn_status_text
+    wallets.name AS wallet_name
     FROM
     deposits
-    LEFT JOIN
-    ipns
-    ON
-    ipns.ipn_request ->> 'txn_id' = deposits.create_request ->> 'txn_id'
     INNER JOIN
     wallets
     ON
@@ -59,7 +53,7 @@ const getByUserId = async (userId, type) => {
     QUERY = `${QUERY} AND deposits.status IN (:statuses)`
     replacements.statuses = statuses
   }
-  QUERY = `${QUERY} ORDER BY id DESC, (ipns.ipn_request ->> 'timestamp')::bigint DESC NULLS LAST`
+  QUERY = `${QUERY} ORDER BY id DESC NULLS LAST`
 
   QUERY = `
     SELECT DISTINCT ON (d.deposit_id) *
@@ -76,6 +70,8 @@ const getByUserId = async (userId, type) => {
 }
 
 const getTxnStatus = async (txnId) => {
+  return {} // TODO: fix below for w/o JSONB
+
   let QUERY = `
     SELECT
     deposits.create_request ->> 'txn_id' as txn_id,

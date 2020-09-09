@@ -1,4 +1,4 @@
-const SCHEMA='http', FPORT=8000, PORT=3000, NODE_ENV='development'
+const { SCHEMA, FPORT, PORT, NODE_ENV } = process.env
 
 const publicIp = require('public-ip')
 

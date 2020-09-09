@@ -45,7 +45,7 @@ const ipns = (Sequelize) => ({
     allowNull: false
   },
   ipn_request: {
-    type: Sequelize.JSONB,
+    type: Sequelize.STRING,
     allowNull: false
   },
   createdAt: {
@@ -157,6 +157,10 @@ const addresses = (Sequelize) => ({
     type: Sequelize.STRING,
     allowNull: true
   },
+  priv_key: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
   createdAt: {
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
@@ -207,7 +211,7 @@ const deposits = (Sequelize) => ({
     allowNull: false
   },
   create_request: {
-    type: Sequelize.JSONB,
+    type: Sequelize.STRING,
     allowNull: false
   },
   createdAt: {
@@ -254,8 +258,8 @@ const withdrawals = (Sequelize) => ({
     allowNull: false
   },
   status_text: {
-    type: Sequelize.JSONB,
-    defaultValue: {}
+    type: Sequelize.STRING,
+    defaultValue: '{}'
   },
   createdAt: {
     type: Sequelize.DATE,

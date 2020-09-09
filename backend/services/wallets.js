@@ -1,4 +1,5 @@
-const { getCallbackAddress, getCurrencies } = require("./coinpayments")
+const Bitcoin = require('bitcoin-address-generator')
+const { getCallbackAddress, getCurrencies } = require('./coinpayments')
 
 const db = require(__basedir + '/db/controllers')
 
@@ -22,35 +23,50 @@ const fetchWalletById = async (walletId) => {
 
 const _addBalancesToWallet = async (walletId, userId) => {
   try {
+    const addressesP = []
     const currencies = getCurrencies()
 
-    const addressesP = []
     currencies.forEach((currency) => {
-      // const addressP = getCallbackAddress({ userId, currency: currency.symbol })
-      //   .then(res => ({ address: res, currency }))
-
-      const addressP = Promise.resolve({
-        address: {
-          address: '',
-          label: '',
-          dest_tag: ''
-        },
-        currency
-      })
-      addressesP.push(addressP)
+      if (currency.symbol === 'BTC') {
+        const addressP = new Promise((resolve, reject) => {
+          try {
+            Bitcoin.createWalletAddress(data => {
+              resolve({
+                addressObj: {
+                  address: data.address,
+                  priv_key: data.key
+                },
+                currency
+              })
+            })
+          } catch(e) {
+            reject(e)
+          }
+        })        
+        addressesP.push(addressP)
+      } else {
+        const addressP = Promise.resolve({
+          addressObj: {
+            address: ''
+          },
+          currency
+        })
+        addressesP.push(addressP)
+      }
     })
     const addresses = await Promise.all(addressesP)
 
     const balances = currencies.map((currency) => {
-      const { address } = addresses.find(item => item.currency.symbol === currency.symbol)
+      console.log(addresses)
+      const { addressObj } = addresses.find(item => item.currency.symbol === currency.symbol)
       return db.balances.insert({
         symbol: currency.symbol,
         amount: 0.1,
         wallet_id: walletId
       })
         .then((balance) => {
-          address.balance_id = balance.id
-          return db.addresses.insert(address)
+          addressObj.balance_id = balance.id
+          return db.addresses.insert(addressObj)
             .then((addressRes) => {
               balance.address = addressRes
               return balance

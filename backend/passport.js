@@ -1,4 +1,4 @@
-const jwtSecret = 'testtt123321'
+const jwtSecret = process.env.JWT_SECRET
 
 const bcrypt = require('bcrypt')
 const passport = require('passport')

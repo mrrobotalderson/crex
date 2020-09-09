@@ -4,7 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     symbol: DataTypes.STRING,
     amount: DataTypes.FLOAT,
     status: DataTypes.STRING,
-    create_request: DataTypes.JSONB
+    create_request: {
+      type: DataTypes.STRING,
+      get() {
+        const jsonbVal = this.getDataValue('create_request')
+        try {
+          return JSON.parse(jsonbVal) || {}
+        } catch (e) {
+          return {}
+        }
+      }
+    }
   })
   Deposit.associate = function(models) {
     Deposit.belongsTo(models.user, {
