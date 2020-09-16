@@ -89,6 +89,50 @@ const wallets = (Sequelize) => ({
   }
 })
 
+const assets = (Sequelize) => ({
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: Sequelize.BIGINT
+  },
+  symbol: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.STRING,
+    defaultValue: ''
+  }
+})
+
+const prices = (Sequelize) => ({
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: Sequelize.BIGINT
+  },
+  asset_id: {
+    type: Sequelize.BIGINT,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'assets',
+      key: 'id',
+      as: 'asset_id'
+    },
+    allowNull: false
+  },
+  value: {
+    type: Sequelize.FLOAT,
+    allowNull: false
+  },
+  datetime: {
+    type: Sequelize.DATE,
+    allowNull: false
+  }
+})
+
 const balances = (Sequelize) => ({
   id: {
     allowNull: false,
@@ -106,8 +150,14 @@ const balances = (Sequelize) => ({
     },
     allowNull: false
   },
-  symbol: {
-    type: Sequelize.STRING,
+  asset_id: {
+    type: Sequelize.BIGINT,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'assets',
+      key: 'id',
+      as: 'asset_id'
+    },
     allowNull: false
   },
   amount: {
@@ -198,8 +248,14 @@ const deposits = (Sequelize) => ({
     },
     allowNull: false
   },
-  symbol: {
-    type: Sequelize.STRING,
+  asset_id: {
+    type: Sequelize.BIGINT,
+    onDelete: 'CASCADE',
+    references: {
+      model: 'asset',
+      key: 'id',
+      as: 'asset_id'
+    },
     allowNull: false
   },
   amount: {
@@ -326,17 +382,19 @@ module.exports = {
         .then(() => {
           const walletsP = queryInterface.createTable('wallets', wallets(Sequelize))
           const tokensP = queryInterface.createTable('tokens', tokens(Sequelize))
-          return Promise.all([walletsP, tokensP])
+          const assetsP = queryInterface.createTable('assets', assets(Sequelize))
+          return Promise.all([walletsP, tokensP, assetsP])
             .then(() => {
               const balancesP = queryInterface.createTable('balances', balances(Sequelize))
-              return Promise.all([balancesP])
+              const pricesP = queryInterface.createTable('prices', prices(Sequelize))
+              return Promise.all([balancesP, pricesP])
                 .then(() => {
                   const addressesP = queryInterface.createTable('addresses', addresses(Sequelize))
                   const depositsP = queryInterface.createTable('deposits', deposits(Sequelize))
                   const withdrawalsP = queryInterface.createTable('withdrawals', withdrawals(Sequelize))
                   return Promise.all([addressesP, depositsP, withdrawalsP])
                     .then(() => {
-                      const balancesU = addUnique(queryInterface, 'balances', ['wallet_id', 'symbol'])
+                      const balancesU = addUnique(queryInterface, 'balances', ['wallet_id', 'asset_id'])
                       return Promise.all([balancesU])
                     })
                 })
@@ -352,11 +410,13 @@ module.exports = {
       return Promise.all([addressesP, depositsP, withdrawalsP])
         .then(() => {
           const balancesP = queryInterface.dropTable('balances')
-          return Promise.all([balancesP])
+          const pricesP = queryInterface.dropTable('prices')
+          return Promise.all([balancesP, pricesP])
             .then(() => {
               const walletsP = queryInterface.dropTable('wallets')
               const tokensP = queryInterface.dropTable('tokens')
-              return Promise.all([walletsP, tokensP])
+              const assetsP = queryInterface.dropTable('assets')
+              return Promise.all([walletsP, tokensP, assetsP])
                 .then(() => {
                   const usersP = queryInterface.dropTable('users')
                   const ipnsP = queryInterface.dropTable('ipns')

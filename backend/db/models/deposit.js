@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'user_id',
       as: 'depositor'
     })
+    Deposit.belongsTo(models.asset, {
+      foreignKey: 'asset_id',
+      as: 'asset'
+    })
     Deposit.belongsTo(models.wallet, {
       foreignKey: 'wallet_id',
       as: 'target'
