@@ -3,13 +3,12 @@ const router = require('express').Router()
 const db = require(__basedir + '/db/controllers')
 const balancesService = require(__basedir + '/services/balances')
 const withdrawalsService = require(__basedir + '/services/withdrawals')
-const { getCurrencies } = require(__basedir + '/services/coinpayments')
 
 router.post('/deposits', async (req, res, next) => {
   const { user_id, symbol, amount } = req.body
 
   try {
-    const currencies = getCurrencies()
+    const currencies = await db.assets.getAll()
     const currencyObj = currencies.find(match => match.symbol === symbol)
 
     if (!currencyObj) throw { status: 400, msg: 'unsupportedCurrency' }

@@ -1,5 +1,5 @@
 const Bitcoin = require('bitcoin-address-generator')
-const { getCallbackAddress, getCurrencies } = require('./coinpayments')
+const { getCallbackAddress } = require('./coinpayments')
 
 const db = require(__basedir + '/db/controllers')
 
@@ -24,7 +24,7 @@ const fetchWalletById = async (walletId) => {
 const _addBalancesToWallet = async (walletId, userId) => {
   try {
     const addressesP = []
-    const currencies = getCurrencies()
+    const currencies = await db.assets.getAll()
 
     currencies.forEach((currency) => {
       if (currency.symbol === 'BTC') {
@@ -57,10 +57,9 @@ const _addBalancesToWallet = async (walletId, userId) => {
     const addresses = await Promise.all(addressesP)
 
     const balances = currencies.map((currency) => {
-      console.log(addresses)
       const { addressObj } = addresses.find(item => item.currency.symbol === currency.symbol)
       return db.balances.insert({
-        symbol: currency.symbol,
+        asset_id: currency.id,
         amount: 0.1,
         wallet_id: walletId
       })

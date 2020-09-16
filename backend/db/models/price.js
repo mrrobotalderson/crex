@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Price = sequelize.define('price', {
     value: DataTypes.FLOAT,
-    datetime: DataTypes.DATETIME,
+    datetime: DataTypes.DATE,
   }, {
     timestamps: false
   })

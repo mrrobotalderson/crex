@@ -1,6 +1,7 @@
-const Withdrawal = require('../models').withdrawal
+const Asset = require('../models').asset
 const Balance = require('../models').balance
 const Wallet = require('../models').wallet
+const Withdrawal = require('../models').withdrawal
 
 const getAll = (options = {}) => {
 	return Withdrawal.findAll(options)
@@ -36,12 +37,16 @@ const getByUserId = (userId, filter = {}) => {
 		include: [{
 			model: Balance,
 			as: 'balanceFrom',
-			attributes: ['id', 'symbol', 'wallet_id'],
+			attributes: ['id', 'wallet_id'],
 			include: [{
 				model: Wallet,
 				as: 'wallet',
 				attributes: ['name' ,'user_id'],
 				where: userFilter
+			}, {
+				model: Asset,
+				as: 'asset',
+				attributes: ['symbol']
 			}]
 		}]
 	}
@@ -67,9 +72,6 @@ const update = (withdrawal) => {
     returning: true,
     where: { id: withdrawal.id }
   }
-
-  console.log(withdrawal)
-
   return Withdrawal.update(withdrawal, options)
 }
 

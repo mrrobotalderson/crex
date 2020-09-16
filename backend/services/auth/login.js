@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 
-const jwtSecret = 'testtt123321'
+const jwtSecret = process.env.JWT_SECRET
 const db = require(__basedir + '/db/controllers')
 
 const loginFn = (req, res, next) => {

@@ -103,6 +103,10 @@ const assets = (Sequelize) => ({
   description: {
     type: Sequelize.STRING,
     defaultValue: ''
+  },
+  address: {
+    type: Sequelize.STRING,
+    defaultValue: ''
   }
 })
 
@@ -252,7 +256,7 @@ const deposits = (Sequelize) => ({
     type: Sequelize.BIGINT,
     onDelete: 'CASCADE',
     references: {
-      model: 'asset',
+      model: 'assets',
       key: 'id',
       as: 'asset_id'
     },

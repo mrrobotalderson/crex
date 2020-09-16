@@ -31,6 +31,7 @@ const getByUserId = async (userId, type) => {
     SELECT
     DISTINCT ON (deposits.id)
     deposits.*,
+    assets.*,
     deposits.id AS deposit_id,
     wallets.name AS wallet_name
     FROM
@@ -38,7 +39,10 @@ const getByUserId = async (userId, type) => {
     INNER JOIN
     wallets
     ON
-    deposits.wallet_id = wallets.id`
+    deposits.wallet_id = wallets.id
+    INNER JOIN
+    assets
+    ON deposits.asset_id = assets.id`
 
   const replacements = {
   }
@@ -53,7 +57,7 @@ const getByUserId = async (userId, type) => {
     QUERY = `${QUERY} AND deposits.status IN (:statuses)`
     replacements.statuses = statuses
   }
-  QUERY = `${QUERY} ORDER BY id DESC NULLS LAST`
+  QUERY = `${QUERY} ORDER BY deposits.id DESC NULLS LAST`
 
   QUERY = `
     SELECT DISTINCT ON (d.deposit_id) *

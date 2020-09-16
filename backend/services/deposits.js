@@ -87,7 +87,7 @@ const getDeposits = async (userId, type = 'all') => {
         status_text: deposit.ipn_status_text,
         address: create_request.address,
         dest_tag: create_request.dest_tag || null,
-        symbol: deposit.symbol,
+        symbol: deposit.asset.symbol,
         amount: deposit.amount,
         confirms: {
           needed: Number(create_request.confirms_needed || 0),

@@ -1,7 +1,6 @@
 const db = require(__basedir + '/db/controllers')
 
 const balancesService = require(__basedir + '/services/balances')
-const { getCurrencies } = require(__basedir + '/services/coinpayments')
 
 const _getWithdrawals = async (userId, filter = {}) => {
   try {
@@ -13,7 +12,7 @@ const _getWithdrawals = async (userId, filter = {}) => {
         txnId: 'N/A',
         status: withdrawal.status,
         address: withdrawal.address,
-        symbol: withdrawal.balanceFrom.symbol,
+        symbol: withdrawal.balanceFrom.asset.symbol,
         amount: withdrawal.amount,
         wallet: withdrawal.balanceFrom.wallet.name,
         createdAt: withdrawal.createdAt,
@@ -59,8 +58,8 @@ const requestWithdrawal = async (userId, { balance, amount, address, tag }) => {
     const _balance = await db.balances.getById(balance.id)
     if (!_balance || _balance.wallet.user_id !== userId) throw { status: 400, msg: 'wrongBalance' }
 
-    const currencies = await getCurrencies()
-    const selectedCurrency = currencies.find(match => match.symbol === _balance.symbol)
+    const currencies = await db.assets.getAll()
+    const selectedCurrency = currencies.find(match => match.symbol === _balance.asset.symbol)
     if (!selectedCurrency) throw { status: 400, msg: 'invalidCurrency' }
 
     try {
@@ -93,7 +92,6 @@ const requestWithdrawal = async (userId, { balance, amount, address, tag }) => {
 
 const confirmWithdrawal = async (withdrawalId) => {
   try {
-    console.log(withdrawalId)
     const withdrawal = (await db.withdrawals.getById(withdrawalId)).toJSON()
     if (withdrawal && withdrawal.status === 'REQUESTED') {
       const { amount } = withdrawal

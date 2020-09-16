@@ -1,20 +1,20 @@
 const router = require('express').Router()
 
+const db = require(__basedir + '/db/controllers')
 const walletsService = require(__basedir + '/services/wallets')
 const balancesService = require(__basedir + '/services/balances')
 const { authMiddleware } = require(__basedir + '/services/auth/middleware')
-const { getCurrencies } = require(__basedir + '/services/coinpayments')
 
 router.get('/wallet/:walletId', authMiddleware(), async (req, res, next) => {
   const walletId = Number(req.params.walletId)
 
   try {
     const balances = await balancesService.fetchByWalletId(walletId)
-    const currencies = getCurrencies()
+    const currencies = await db.assets.getAll()
 
     balances.forEach((balance) => {
       if (balance.address.address === '') {
-        const currency = currencies.find(item => item.symbol === balance.symbol)
+        const currency = currencies.find(item => item.symbol === balance.asset.symbol)
         balance.address = {
           ...balance.address,
           ...currency
@@ -35,7 +35,7 @@ router.get('/wallet/:wallet/symbol/:symbol', authMiddleware(), async (req, res, 
   try {
     const balance = await balancesService.fetchBalance(walletId, symbol)
     if (balance.address.address === '') {
-      const currencies = getCurrencies()
+      const currencies = await db.assets.getAll()
       const currency = currencies.find(item => item.symbol === symbol)
 
       balance.address = {

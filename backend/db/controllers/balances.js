@@ -1,6 +1,7 @@
+const Address = require('../models').address
+const Asset = require('../models').asset
 const Balance = require('../models').balance
 const Wallet = require('../models').wallet
-const Address = require('../models').address
 
 const getAll = (opts = {}) => {
 	return Balance.findAll(opts)
@@ -8,15 +9,12 @@ const getAll = (opts = {}) => {
 }
 
 const getAllFiltered = (criteria = {}) => {
-  const { symbol, wallet_id } = criteria
+	const { symbol, wallet_id } = criteria
 
   const symbolCriteria = {}
   if (symbol) symbolCriteria.symbol = symbol
 
   return getAll({
-    where: {
-      ...symbolCriteria
-    },
     include: [{
 			model: Wallet,
 			as: 'wallet',
@@ -26,10 +24,16 @@ const getAllFiltered = (criteria = {}) => {
 		}, {
 			model: Address,
 			as: 'address'
+		}, {
+			model: Asset,
+			as: 'asset',
+			where: {
+				...symbolCriteria
+			}
 		}]
   })
     .then((results) => {
-      // in case we have both present there is only one possible combination
+			// in case we have both present there is only one possible combination
       if (symbol && wallet_id) {
         return results[0] || null
       }
