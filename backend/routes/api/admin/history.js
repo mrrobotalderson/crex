@@ -4,7 +4,6 @@ const historyService = require(__basedir + '/services/history')
 
 router.get('/', async (req, res, next) => {
   const { type } = req.query
-
   const validTypes = ['pending', 'completed']
 
   try {

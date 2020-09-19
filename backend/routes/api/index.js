@@ -5,6 +5,9 @@ const { authMiddleware, adminMiddleware } = require(__basedir + '/services/auth/
 const accountsRoutes = require('./accounts')
 router.use('/accounts', accountsRoutes)
 
+const assetsRoutes = require('./assets')
+router.use('/assets', assetsRoutes)
+
 const authRoutes = require('./auth')
 router.use('/auth', authRoutes)
 

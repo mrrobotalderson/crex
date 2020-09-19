@@ -1,12 +1,28 @@
 const Asset = require('../models').asset
+const Price = require('../models').price
 
 const getAll = (options = {}) => {
 	return Asset.findAll(options)
 }
 
+const getAllWithPrices = (options = {}) => {
+	const includes = options.include || []
+	includes.push({
+		model: Price,
+		as: 'prices'
+	})
+	options.include = includes
+	return getAll(options)
+}
+
 const getOne = (criteria) => {
 	const options = {
-		where: criteria
+		where: criteria,
+		include: [{
+			model: Price,
+			as: 'prices',
+			attributes: ['value', 'datetime']
+		}]
 	}
 	return Asset.findOne(options)
 }
@@ -20,6 +36,10 @@ const insert = (asset) => {
 	return Asset
 		.create(asset)
 		.then(asset => getById(asset.id))
+}
+
+const insertPrice = (price) => {
+	return Price.create(price)
 }
 
 const update = (asset) => {
@@ -40,9 +60,11 @@ const _delete = (assetId) => {
 
 module.exports = {
 	getAll,
+	getAllWithPrices,
 	getOne,
 	getById,
 	insert,
+	insertPrice,
 	update,
 	delete: _delete
 }

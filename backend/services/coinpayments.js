@@ -58,12 +58,5 @@ module.exports = {
     catch(e) {
       return Promise.reject(e)
     }
-  },
-  getCurrencies: () => {
-    const currencies = [{
-      symbol: 'BTC',
-      address: '36Dj4FQ19nsdp5fTSmG8yv2sVDUE8iSHs5'
-    }]
-    return currencies
   }
 }
