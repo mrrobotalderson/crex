@@ -24,7 +24,17 @@ router.get('/:id', authMiddleware(), async (req, res, next) => {
 router.post('/', authMiddleware(), adminMiddleware, async (req, res, next) => {
   try {
     const { asset } = req.body
-    const assetRes = await db.deposits.insert(asset)
+    const assetRes = await db.assets.insert(asset)
+    res.send({ asset: assetRes })
+  } catch(e) {
+    next(e)
+  }
+})
+
+router.put('/', authMiddleware(), adminMiddleware, async (req, res, next) => {
+  try {
+    const { asset } = req.body
+    const assetRes = await db.assets.update(asset)
     res.send({ asset: assetRes })
   } catch(e) {
     next(e)

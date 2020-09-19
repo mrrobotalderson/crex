@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Wallet from '../views/Wallet'
 import Admin from '../views/Admin'
+import Asset from '../views/Asset'
 import Auth from '../views/Auth'
 import Testbed from '../views/Testbed'
 
@@ -22,6 +23,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: Admin,
+  },
+  {
+    path: '/admin/asset/:id',
+    name: 'asset',
+    component: Asset,
   },
   {
     path: '/testbed',

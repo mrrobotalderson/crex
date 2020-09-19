@@ -32,8 +32,37 @@
                 b-form-group(label="Symbol" label-cols="3")
                   b-form-select(v-model="deposit.symbol" :options="symbols" required)
                 b-form-group(label="Amount" label-cols="3")
-                  b-form-input(v-model.number="deposit.amount" required)
+                  b-form-input(v-model.number="deposit.amount" type="number" min="0" required)
                 b-button(type="submit") Submit
+          b-tab.p10(title="Assets")
+            .flex-col
+              .p10
+              table.w100
+                tr.font-weight-bold
+                  td Symbol
+                  td Address
+                  td Actions
+                .p5-ver
+                tr(v-for="assetItem in assets" :id="assetItem.id")
+                  td {{ assetItem.symbol }}
+                  td {{ assetItem.address }}
+                  td.flex-row
+                    b-button(@click="editAsset(assetItem)") Edit
+                    .p5-side
+                    b-button(@click="gotoAssetDetails(assetItem.id)") Details
+              hr
+              h6 Add/edit asset
+              b-form.flex-col(@submit.prevent="upsertAsset")
+                .p15-top
+                b-form-group(label="Symbol" label-cols="3")
+                  b-form-input(v-model="asset.symbol" required)
+                b-form-group(label="Description" label-cols="3")
+                  b-form-input(v-model="asset.description")
+                b-form-group(label="Address" label-cols="3")
+                  b-form-input(v-model="asset.address" required)
+                b-button(type="submit") Submit
+                .p5
+                b-button(@click="resetAsset") Reset
 </template>
 
 <script>
@@ -45,10 +74,18 @@ const depositTemplate = {
   amount: 0.001
 }
 
+const assetTemplate = {
+  id: null,
+  symbol: '',
+  description: '',
+  address: ''
+}
+
 export default {
   created() {
     this.fetchHistory()
     this.fetchCustomers()
+    this.fetchAssets()
   },
   filters: {
     capitalize: value => {
@@ -77,7 +114,9 @@ export default {
     history: [],
     customers: [],
     deposit: { ...depositTemplate },
-    symbols: ['BTC']
+    assets: [],
+    asset: { ...assetTemplate },
+    symbols: ['BTC'] // TODO: work this out
   }),
   methods: {
     fetchCustomers() {
@@ -92,6 +131,12 @@ export default {
           this.history = history
         })
     },
+    fetchAssets() {
+      api.fetchAssets()
+        .then(({ assets }) => {
+          this.assets = assets
+        })
+    },
     insertDeposit() {
       api.insertDeposit(this.deposit)
         .then(() => {
@@ -104,6 +149,26 @@ export default {
         .then(() => {
           this.fetchHistory()
         })
+    },
+    upsertAsset() {
+      return api.upsertAsset(this.asset)
+        .then(() => {
+          this.fetchAssets()
+        })
+    },
+    editAsset(asset) {
+      this.asset = {
+        id: asset.id,
+        symbol: asset.symbol,
+        description: asset.description,
+        address: asset.address
+      }
+    },
+    gotoAssetDetails(assetId) {
+      this.$router.push({ name: 'asset', params: { id: assetId } })
+    },
+    resetAsset() {
+      this.asset = { ...assetTemplate }
     }
   }
 }

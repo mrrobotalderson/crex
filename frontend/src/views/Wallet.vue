@@ -38,7 +38,7 @@
               h6 Withdraw from {{ selectedWallet.name }}
               .p15-top
               b-form-group(label="To" label-cols="3")
-                b-form-input(v-model.number="withdrawal.address" placeholder="To" required minlength="26" maxlength="35")
+                b-form-input(v-model="withdrawal.address" placeholder="To" required minlength="26" maxlength="35")
               b-input-group(label="Amount" label-cols="3")
                 b-form-input(v-model.number="withdrawal.amount" placeholder="Amount" type="number" min="0.001" step="0.001" :max="selectedBalance.amount" required)
                 b-input-group-append
