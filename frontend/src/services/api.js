@@ -1,14 +1,12 @@
 import http from './http'
 import { getAuthHeaders } from './auth'
 
-const symbol = 'BTC'
-
 export default {
   fetchWallets() {
     return getAuthHeaders()
       .then(options => http.get('/wallets', options))
   },
-  fetchBalance(walletId) {
+  fetchBalance(walletId, symbol = 'BTC') {
     return getAuthHeaders()
       .then(options => http.get(`/balances/wallet/${walletId}/symbol/${symbol}`, options))
   },

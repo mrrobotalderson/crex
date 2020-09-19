@@ -2,9 +2,9 @@
   Layout
     b-card
       b-card-text
-        b-dropdown(v-if="selectedWallet" :text="selectedWallet.name + ' - ' + selectedBalance.amount + ' ' + selectedBalance.symbol")
+        b-dropdown(v-if="selectedWallet" :text="selectedWallet.name + ' - ' + selectedBalance.amount + ' ' + selectedBalance.asset.symbol")
           b-dropdown-item(v-for="balance in balances" :key="balance.id" @click="selectBalance(balance)")
-            span {{ balance.wallet.name }} - {{ balance.amount }} {{ balance.symbol }}
+            span {{ balance.wallet.name }} - {{ balance.amount }} {{ balance.asset.symbol }}
         br
         br
         b-tabs(fill)

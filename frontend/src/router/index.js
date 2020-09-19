@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Wallet from '../views/Wallet'
 import Admin from '../views/Admin'
 import Auth from '../views/Auth'
+import Testbed from '../views/Testbed'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: Admin,
+  },
+  {
+    path: '/testbed',
+    name: 'testbed',
+    component: Testbed,
   },
   {
     path: '/register',
