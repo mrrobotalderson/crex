@@ -8,7 +8,14 @@
         br
         br
         b-tabs(fill)
-          b-tab.p10(title="History" active)
+          b-tab.p10(v-if="selectedWallet" title="Stats" active)
+            .flex-col(v-if="prices.length")
+              .p10-ver
+                h4 Current {{ selectedBalance.asset.symbol }} value: ${{ prices[prices.length - 1].value * selectedBalance.amount }}
+              h5 Price history
+              Chart(:chartData="pricesChart" :options="chartOptions")
+            h5(v-else) No enough data to generate stats...
+          b-tab.p10(title="History")
             .p10
             table.w100
               tr.font-weight-bold
@@ -48,6 +55,7 @@
 </template>
 
 <script>
+import Chart from '@/components/Chart'
 import api from '@/services/api'
 
 export default {
@@ -86,11 +94,37 @@ export default {
       address: '',
       amount: 0.001,
       tag: null
+    },
+    prices: [],
+    chartOptions: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            callback: value => `$${value}`
+          }
+        }]
+      }
     }
   }),
   computed: {
     selectedWallet() {
       return this.selectedBalance ? this.selectedBalance.wallet : null
+    },
+    pricesChart() {
+      const prices = this.prices.map(price => price.value)
+      const datetimes = this.prices.map(price => this.$options.filters.datetime(price.datetime))
+
+      return {
+        labels: datetimes,
+        datasets: [
+          {
+            label: `${this.selectedBalance.asset.symbol} price`,
+            data: prices
+          }
+        ]
+      }
     }
   },
   methods: {
@@ -112,6 +146,11 @@ export default {
     },
     selectBalance(balance) {
       this.selectedBalance = balance
+      api.fetchAsset(balance.asset_id)
+        .then(({ asset }) => {
+          const { prices } = asset
+          this.prices = prices
+        })
     },
     initWithdraw() {
       const withdrawalObj = {
@@ -133,6 +172,9 @@ export default {
     setMaxWithdrawal() {
       this.withdrawal.amount = this.selectedBalance.amount
     }
+  },
+  components: {
+    Chart
   }
 }
 </script>

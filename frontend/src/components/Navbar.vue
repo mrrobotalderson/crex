@@ -3,6 +3,7 @@
     .w100.flex-row.align-center
       span.text-white {{ user ? user.email : '' }}
       .flex-1
+      span.p15-right.pointer.text-white(v-if="user && user.is_admin" @click="gotoAdmin") Admin
       .pointer.text-white(@click="loginorout") {{ user ? 'Logout' : 'Login' }}
 </template>
 
@@ -32,6 +33,9 @@ export default {
       } else {
         this.$router.push({ name: 'login' })
       }
+    },
+    gotoAdmin() {
+      this.$router.push({ name: 'admin' })
     }
   }
 }

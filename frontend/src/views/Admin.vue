@@ -115,9 +115,13 @@ export default {
     customers: [],
     deposit: { ...depositTemplate },
     assets: [],
-    asset: { ...assetTemplate },
-    symbols: ['BTC'] // TODO: work this out
+    asset: { ...assetTemplate }
   }),
+  computed: {
+    symbols() {
+      return this.assets.map(asset => asset.symbol)
+    }
+  },
   methods: {
     fetchCustomers() {
       api.fetchCustomers()
