@@ -17,6 +17,11 @@ const getById = (ipnId) => {
 }
 
 const insert = (ipn) => {
+	if (ipn.ipn_request) {
+		try {
+		  ipn.ipn_request = JSON.stringify(ipn.ipn_request)
+		} catch(_) {}
+	  }
 	return Ipn
 		.create(ipn)
 		.then(ipn => getById(ipn.id))

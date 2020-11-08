@@ -101,6 +101,11 @@ const getTxnStatus = async (txnId) => {
 }
 
 const insert = (deposit) => {
+  if (deposit.create_request) {
+    try {
+      deposit.create_request = JSON.stringify(deposit.create_request)
+    } catch(_) {}
+  }
 	return Deposit
 		.create(deposit)
 		.then(deposit => getById(deposit.id))

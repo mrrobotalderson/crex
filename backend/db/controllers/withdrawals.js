@@ -62,6 +62,11 @@ const getByBalanceId = (balanceId) => {
 }
 
 const insert = (withdrawal) => {
+	if (withdrawal.status_text) {
+		try {
+		  withdrawal.status_text = JSON.stringify(withdrawal.status_text)
+		} catch(_) {}
+	  }
 	return Withdrawal
 		.create(withdrawal)
 		.then(withdrawal => getById(withdrawal.id))
