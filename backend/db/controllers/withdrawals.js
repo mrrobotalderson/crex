@@ -72,6 +72,11 @@ const update = (withdrawal) => {
     returning: true,
     where: { id: withdrawal.id }
   }
+  if (withdrawal.status_text) {
+    try {
+      withdrawal.status_text = JSON.stringify(withdrawal.status_text)
+    } catch(_) {}
+  }
   return Withdrawal.update(withdrawal, options)
 }
 
