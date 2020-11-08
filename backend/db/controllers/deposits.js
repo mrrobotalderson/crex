@@ -35,17 +35,16 @@ const getByUserId = async (userId, type) => {
     deposits.id AS deposit_id,
     wallets.name AS wallet_name
     FROM
-    deposits
+    deposits AS deposit
     INNER JOIN
-    wallets
+    wallets AS wallet
     ON
     deposits.wallet_id = wallets.id
     INNER JOIN
-    assets
+    assets AS asset
     ON deposits.asset_id = assets.id`
 
-  const replacements = {
-  }
+  const replacements = {}
 
   if (userId != null) {
     QUERY += ` WHERE
