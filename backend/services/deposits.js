@@ -78,14 +78,14 @@ const getDeposits = async (userId, type = 'all') => {
   try {
     const deposits = await db.deposits.getByUserId(userId, type)
     return deposits.map((deposit) => {
-      const { create_request } = deposit || {}
+      const create_request = JSON.parse(deposit.create_request || '{}')
       const mappedDeposit = {
         id: deposit.id,
         userId: deposit.user_id,
         txnId: create_request.txn_id || 'N/A',
         status: deposit.status,
         status_text: deposit.ipn_status_text,
-        address: create_request.address,
+        address: create_request.address || null,
         dest_tag: create_request.dest_tag || null,
         symbol: deposit.symbol,
         amount: deposit.amount,
