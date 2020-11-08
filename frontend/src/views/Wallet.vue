@@ -22,12 +22,14 @@
                 td Type
                 td Amount
                 td Address
+                td Status
                 td Datetime
               .p5-ver
               tr(v-for="historyItem in history" :id="historyItem.id")
                 td {{ historyItem.type | capitalize }}
                 td {{ historyItem.amount }} {{ historyItem.symbol }}
                 td {{ historyItem.address }}
+                td {{ historyItem.status }}
                 td {{ historyItem.createdAt | datetime }}
           b-tab.p10(v-if="selectedWallet" title="Invest")
             .flex-col
