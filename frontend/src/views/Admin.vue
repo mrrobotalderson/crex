@@ -30,7 +30,7 @@
                 b-form-group(label="User ID" label-cols="3")
                   b-form-select(v-model.number="deposit.user_id" :options="customers" value-field="id" text-field="email" required)
                 b-form-group(label="Symbol" label-cols="3")
-                  b-form-select(v-model="deposit.symbol" :options="symbols" required)
+                  b-form-select(v-model="deposit.asset_id" :options="assets" text-field="symbol" value-field="id" required)
                 b-form-group(label="Amount" label-cols="3")
                   b-form-input(v-model.number="deposit.amount" type="number" min="0" step="0.001" required)
                 b-button(type="submit") Submit
@@ -70,7 +70,7 @@ import api from '@/services/api'
 
 const depositTemplate = {
   user_id: null,
-  symbol: 'BTC',
+  asset_id: null,
   amount: 0.001
 }
 
@@ -117,11 +117,6 @@ export default {
     assets: [],
     asset: { ...assetTemplate }
   }),
-  computed: {
-    symbols() {
-      return this.assets.map(asset => asset.symbol)
-    }
-  },
   methods: {
     fetchCustomers() {
       api.fetchCustomers()
