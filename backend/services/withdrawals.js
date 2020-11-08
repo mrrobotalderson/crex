@@ -96,8 +96,8 @@ const confirmWithdrawal = async (withdrawalId) => {
     if (withdrawal && withdrawal.status === 'REQUESTED') {
       const { amount } = withdrawal
 
-      const { symbol, wallet_id } = await balancesService.fetchById(withdrawal.balance_id)
-      await balancesService.changeBalanceAmount(wallet_id, { symbol, amount: -amount })
+      const { asset, wallet_id } = await balancesService.fetchById(withdrawal.balance_id)
+      await balancesService.changeBalanceAmount(wallet_id, { asset.symbol, amount: -amount })
 
       withdrawal.status = 'COMPLETED'
       await db.withdrawals.update(withdrawal)
