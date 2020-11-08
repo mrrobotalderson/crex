@@ -5,13 +5,13 @@ const balancesService = require(__basedir + '/services/balances')
 const withdrawalsService = require(__basedir + '/services/withdrawals')
 
 router.post('/deposits', async (req, res, next) => {
-  const { user_id, symbol, amount } = req.body
+  const { user_id, asset_id, amount } = req.body
 
   try {
-    const currencies = await db.assets.getAll()
-    const currencyObj = currencies.find(match => match.symbol === symbol)
+    const assets = await db.assets.getAll()
+    const assetObj = assets.find(match => match.id === asset_id)
 
-    if (!currencyObj) throw { status: 400, msg: 'unsupportedCurrency' }
+    if (!assetObj) throw { status: 400, msg: 'unsupportedCurrency' }
     
     const wallets = await db.wallets.getByUserId(user_id)
     if (!wallets.length) throw { status: 400, msg: 'noWalletToUse' }
@@ -20,16 +20,16 @@ router.post('/deposits', async (req, res, next) => {
 
     const depositObj = {
       user_id,
+      asset_id,
       wallet_id,
       amount,
-      symbol,
       status: 'COMPLETED',
       create_request: {
-        address: currencyObj.address
+        address: assetObj.address
       }
     }
 
-    await balancesService.changeBalanceAmount(wallet_id, { symbol, amount })
+    await balancesService.changeBalanceAmount(wallet_id, { symbol: assetObj.symbol, amount })
 
     const depositRes = await db.deposits.insert(depositObj)
     res.send(depositRes)
