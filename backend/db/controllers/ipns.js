@@ -25,7 +25,12 @@ const insert = (ipn) => {
 const update = (ipn) => {
 	const options = {
 		where: { id: ipn.id }
-	}
+  }
+  if (ipn.ipn_request) {
+    try {
+      ipn.ipn_request = JSON.stringify(ipn.ipn_request)
+    } catch(_) {}
+  }
 	return Ipn.update(ipn, options)
 }
 

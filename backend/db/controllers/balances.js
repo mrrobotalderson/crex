@@ -15,7 +15,10 @@ const getAllFiltered = (criteria = {}) => {
   } = criteria
 
   const symbolCriteria = {}
-  if (symbol) symbolCriteria.symbol = symbol
+  if (symbol) {
+    symbolCriteria.symbol = symbol
+    delete criteria.symbol
+  }
 
   return getAll({
       include: [{
@@ -50,7 +53,10 @@ const getOne = (criteria) => {
   } = criteria
 
   const symbolCriteria = {}
-  if (symbol) symbolCriteria.symbol = symbol
+  if (symbol) {
+    symbolCriteria.symbol = symbol
+    delete criteria.symbol
+  }
 
   const options = {
     where: criteria,

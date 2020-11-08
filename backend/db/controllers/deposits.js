@@ -109,7 +109,12 @@ const insert = (deposit) => {
 const update = (deposit) => {
 	const options = {
 		where: { id: deposit.id }
-	}
+  }
+  if (deposit.create_request) {
+    try {
+      deposit.create_request = JSON.stringify(deposit.create_request)
+    } catch(_) {}
+  }
   return Deposit.update(deposit, options)
     .then(() => getById(deposit.id))
 }

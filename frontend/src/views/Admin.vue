@@ -32,7 +32,7 @@
                 b-form-group(label="Symbol" label-cols="3")
                   b-form-select(v-model="deposit.symbol" :options="symbols" required)
                 b-form-group(label="Amount" label-cols="3")
-                  b-form-input(v-model.number="deposit.amount" type="number" min="0" required)
+                  b-form-input(v-model.number="deposit.amount" type="number" min="0" step="0.001" required)
                 b-button(type="submit") Submit
           b-tab.p10(title="Assets")
             .flex-col
